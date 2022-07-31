@@ -3,6 +3,7 @@ from django.db import models
 
 
 # Create your models here.
+from django.utils.text import slugify
 
 
 class Link(models.Model):
@@ -12,3 +13,10 @@ class Link(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     created_date = models.DateTimeField()
     active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.description
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.target_url)
+        super(Link, self).save(*args, **kwargs)
